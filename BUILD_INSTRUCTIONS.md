@@ -128,6 +128,21 @@ dist/
 
 ## Troubleshooting
 
+### Common PyInstaller Issues
+
+#### Missing Email Module Error
+If you get: `ModuleNotFoundError: No module named 'email'`
+
+**Solution**: The project now includes a comprehensive PyInstaller spec file (`fileserver.spec`) that properly handles all Python standard library dependencies including the email module. Use this command:
+
+```cmd
+pyinstaller fileserver.spec
+```
+
+This spec file includes all necessary hidden imports and should resolve the email module issue.
+
+## Additional Troubleshooting
+
 ### Common Build Issues:
 
 1. **Missing Dependencies**:

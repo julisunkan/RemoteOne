@@ -10,21 +10,33 @@ import shutil
 def build_exe():
     """Build the Flask app as a Windows executable"""
     
-    # PyInstaller command
-    build_command = [
-        'pyinstaller',
-        '--onefile',                    # Single executable file
-        '--windowed',                   # No console window (GUI mode)
-        '--name=FileServer',           # Output name
-        '--icon=app.ico',              # App icon (if exists)
-        '--add-data=templates;templates',      # Include templates folder
-        '--add-data=static;static',            # Include static files
-        '--add-data=uploads;uploads',          # Include uploads folder
-        '--hidden-import=netifaces',           # Ensure netifaces is included
-        '--hidden-import=qrcode',              # Ensure qrcode is included
-        '--hidden-import=PIL',                 # Ensure Pillow is included
-        'main.py'                              # Entry point
-    ]
+    # Check if spec file exists, use it for more reliable builds
+    spec_file = 'fileserver.spec'
+    if os.path.exists(spec_file):
+        print(f"Using spec file: {spec_file}")
+        build_command = ['pyinstaller', spec_file]
+    else:
+        # Fallback to command-line arguments
+        build_command = [
+            'pyinstaller',
+            '--onefile',                    # Single executable file
+            '--windowed',                   # No console window (GUI mode)
+            '--name=FileServer',           # Output name
+            '--icon=app.ico',              # App icon (if exists)
+            '--add-data=templates;templates',      # Include templates folder
+            '--add-data=static;static',            # Include static files
+            '--add-data=uploads;uploads',          # Include uploads folder
+            '--hidden-import=netifaces',           # Ensure netifaces is included
+            '--hidden-import=qrcode',              # Ensure qrcode is included
+            '--hidden-import=PIL',                 # Ensure Pillow is included
+            '--hidden-import=email',               # Fix email module import
+            '--hidden-import=email.mime',          # Email MIME types
+            '--hidden-import=email.mime.text',     # Email text handling
+            '--hidden-import=email.utils',         # Email utilities
+            '--hidden-import=pkg_resources',       # Package resources
+            '--collect-all=email',                 # Collect all email submodules
+            'main.py'                              # Entry point
+        ]
     
     print("Building Windows executable...")
     print("Command:", ' '.join(build_command))
