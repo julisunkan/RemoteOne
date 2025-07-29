@@ -46,7 +46,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Global variables for server info
 SERVER_PASSWORD = None
 SERVER_URL = None
-SERVER_PORT = 5000
+SERVER_PORT = int(os.environ.get('PORT', 5000))
 
 
 def generate_password(length=12):
@@ -56,7 +56,17 @@ def generate_password(length=12):
 
 
 def get_server_url():
-    """Get the server URL - prioritize local network IP for WiFi access"""
+    """Get the server URL - adapt for cloud deployment"""
+    # Check if running on Render or other cloud platform
+    render_url = os.environ.get('RENDER_EXTERNAL_URL')
+    if render_url:
+        return render_url
+    
+    # Check for other cloud platform URLs
+    heroku_app = os.environ.get('HEROKU_APP_NAME')
+    if heroku_app:
+        return f"https://{heroku_app}.herokuapp.com"
+    
     try:
         # First try to get local network IP using socket connection
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

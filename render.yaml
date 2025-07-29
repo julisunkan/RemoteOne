@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: wifi-file-server
+    env: python
+    buildCommand: pip install -r render_requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 main:app
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    disk:
+      name: file-storage
+      mountPath: /opt/render/project/src/uploads
+      sizeGB: 1
