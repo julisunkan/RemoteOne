@@ -1,0 +1,422 @@
+/* Custom CSS for File Server */
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #0dcaf0;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --background-dark: #1a1a1a;
+    --card-bg-dark: #2d2d2d;
+    --border-color: #495057;
+}
+
+/* Global Styles */
+body {
+    background-color: var(--background-dark);
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Header Styles */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* File Card Specific */
+.file-card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.file-card .card-header {
+    background-color: rgba(13, 110, 253, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+}
+
+.file-type-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Info Box Styles */
+.info-box {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.info-box .form-label {
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+/* QR Code Styles */
+.qr-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.qr-code {
+    border-radius: 10px;
+    background: white;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Feature Items */
+.feature-item {
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: background-color 0.3s ease;
+}
+
+.feature-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Login Page Styles */
+.login-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(13, 110, 253, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(25, 135, 84, 0.1) 0%, transparent 50%);
+    z-index: -1;
+}
+
+.login-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--primary-color), #0b5ed7);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(45deg, var(--success-color), #157347);
+    border: none;
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, var(--warning-color), #e0a800);
+    border: none;
+    color: var(--dark-color);
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, var(--danger-color), #bb2d3b);
+    border: none;
+}
+
+.btn-info {
+    background: linear-gradient(45deg, var(--info-color), #0aa2c0);
+    border: none;
+    color: var(--dark-color);
+}
+
+/* Form Styles */
+.form-control {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+.form-control:focus {
+    background-color: var(--card-bg-dark);
+    border-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.input-group-text {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+}
+
+/* Modal Styles */
+.modal-content {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.alert-success {
+    background-color: rgba(25, 135, 84, 0.2);
+    color: #75b798;
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #ea868f;
+}
+
+.alert-info {
+    background-color: rgba(13, 202, 240, 0.2);
+    color: #6edff6;
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffda6a;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 4rem 2rem;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 15px;
+    border: 2px dashed var(--border-color);
+}
+
+/* File Info */
+.file-info {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Badge Styles */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.75em;
+    border-radius: 6px;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    background-color: var(--card-bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.dropdown-item:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Stats Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-info,
+.card.bg-warning {
+    border: none;
+    border-radius: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .file-card {
+        margin-bottom: 1rem;
+    }
+    
+    .feature-icon {
+        font-size: 2rem;
+    }
+    
+    .qr-code {
+        max-width: 200px !important;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .info-box {
+        padding: 0.75rem;
+    }
+    
+    .feature-item h6 {
+        font-size: 0.875rem;
+    }
+    
+    .feature-item p {
+        font-size: 0.75rem;
+    }
+    
+    .qr-code {
+        max-width: 150px !important;
+        padding: 10px;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading States */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hover Effects */
+.file-card:hover .card-header {
+    background-color: rgba(13, 110, 253, 0.2);
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Focus States */
+.btn:focus,
+.btn.focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Text Selection */
+::selection {
+    background-color: rgba(13, 110, 253, 0.3);
+    color: #ffffff;
+}
+
+::-moz-selection {
+    background-color: rgba(13, 110, 253, 0.3);
+    color: #ffffff;
+}

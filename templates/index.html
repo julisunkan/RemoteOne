@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Server - Welcome</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid min-vh-100 d-flex flex-column">
+        <!-- Header -->
+        <nav class="navbar navbar-dark bg-primary mb-4">
+            <div class="container">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="fas fa-server me-2"></i>
+                    File Server
+                </span>
+                <div class="d-flex">
+                    <span class="badge bg-success me-2">
+                        <i class="fas fa-wifi me-1"></i>
+                        Online
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container flex-grow-1">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Welcome Card -->
+                    <div class="card shadow-lg mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="card-title mb-0">
+                                <i class="fas fa-home me-2"></i>
+                                Welcome to Your File Server
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">Your personal file server is running and ready to use. Share files securely across all your devices!</p>
+                            
+                            <!-- Server Information -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <label class="form-label fw-bold">
+                                            <i class="fas fa-globe me-1"></i>
+                                            Server URL
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="serverUrl" 
+                                                   value="http://{{ server_ip }}:{{ server_port }}" readonly>
+                                            <button class="btn btn-outline-secondary" type="button" 
+                                                    onclick="copyToClipboard('serverUrl')" title="Copy URL">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <label class="form-label fw-bold">
+                                            <i class="fas fa-key me-1"></i>
+                                            Access Password
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="serverPassword" 
+                                                   value="{{ server_password }}" readonly>
+                                            <button class="btn btn-outline-secondary" type="button" 
+                                                    onclick="copyToClipboard('serverPassword')" title="Copy Password">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Card -->
+                    <div class="card shadow-lg mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-qrcode me-2"></i>
+                                Quick Access QR Code
+                            </h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-muted mb-3">Scan this QR code to quickly access the server URL and password</p>
+                            <div class="qr-container">
+                                <img src="{{ url_for('qr_code') }}" alt="QR Code" class="img-fluid qr-code" 
+                                     style="max-width: 250px; background: white; padding: 10px; border-radius: 8px;">
+                            </div>
+                            <p class="small text-muted mt-3">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Contains both URL and password for easy sharing
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Actions Card -->
+                    <div class="card shadow-lg mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-rocket me-2"></i>
+                                Get Started
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg w-100">
+                                        <i class="fas fa-sign-in-alt me-2"></i>
+                                        Access File Manager
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-success btn-lg w-100" onclick="refreshInfo()">
+                                        <i class="fas fa-sync-alt me-2"></i>
+                                        Refresh Server Info
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Features Card -->
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-star me-2"></i>
+                                Features
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="feature-item text-center">
+                                        <i class="fas fa-shield-alt feature-icon text-success"></i>
+                                        <h6>Secure Access</h6>
+                                        <p class="small text-muted">Password protected file access</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="feature-item text-center">
+                                        <i class="fas fa-play-circle feature-icon text-primary"></i>
+                                        <h6>Media Streaming</h6>
+                                        <p class="small text-muted">Stream videos and audio directly</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="feature-item text-center">
+                                        <i class="fas fa-mobile-alt feature-icon text-warning"></i>
+                                        <h6>Mobile Friendly</h6>
+                                        <p class="small text-muted">Optimized for all devices</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-center py-3 mt-5">
+            <div class="container">
+                <p class="text-muted mb-0">
+                    <i class="fas fa-server me-1"></i>
+                    File Server - Secure File Sharing Made Easy
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
