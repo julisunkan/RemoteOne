@@ -2,7 +2,7 @@ modules = ["python-3.11", "web", "nodejs-20"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "ncurses", "openjpeg", "openssl", "postgresql", "tcl", "tk", "wine64", "zlib"]
+packages = ["SDL2", "SDL2_image", "SDL2_mixer", "SDL2_ttf", "freetype", "lcms2", "libcxx", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "mtdev", "ncurses", "openjpeg", "openssl", "pkg-config", "postgresql", "tcl", "tk", "wine64", "zlib"]
 
 [deployment]
 deploymentTarget = "autoscale"
