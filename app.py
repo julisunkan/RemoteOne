@@ -45,7 +45,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Global variables for server info
 SERVER_PASSWORD = None
-SERVER_IP = None
+SERVER_URL = None
 SERVER_PORT = 5000
 
 
@@ -55,17 +55,22 @@ def generate_password(length=12):
     return ''.join(secrets.choice(characters) for _ in range(length))
 
 
-def get_local_ip():
-    """Get the local IP address"""
+def get_server_url():
+    """Get the server URL - prioritize Replit domain for external access"""
     try:
-        # Connect to a remote address to determine local IP
+        # Check if running on Replit
+        replit_domain = os.environ.get('REPLIT_DEV_DOMAIN')
+        if replit_domain:
+            return f"https://{replit_domain}"
+        
+        # Fallback to local IP for development
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
         s.close()
-        return ip
+        return f"http://{ip}:{SERVER_PORT}"
     except Exception:
-        return "127.0.0.1"
+        return f"http://127.0.0.1:{SERVER_PORT}"
 
 
 def allowed_file(filename):
@@ -104,11 +109,11 @@ def format_file_size(size_bytes):
 
 def generate_qr_code():
     """Generate QR code containing server URL and password"""
-    global SERVER_IP, SERVER_PASSWORD
-    if not SERVER_IP or not SERVER_PASSWORD:
+    global SERVER_URL, SERVER_PASSWORD
+    if not SERVER_URL or not SERVER_PASSWORD:
         return None
     
-    qr_data = f"URL: http://{SERVER_IP}:{SERVER_PORT}\nPassword: {SERVER_PASSWORD}"
+    qr_data = f"URL: {SERVER_URL}\nPassword: {SERVER_PASSWORD}"
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
     qr.add_data(qr_data)
     qr.make(fit=True)
@@ -125,12 +130,12 @@ def generate_qr_code():
 
 def initialize_server():
     """Initialize server settings"""
-    global SERVER_PASSWORD, SERVER_IP
+    global SERVER_PASSWORD, SERVER_URL
     if not SERVER_PASSWORD:
         SERVER_PASSWORD = generate_password()
-    if not SERVER_IP:
-        SERVER_IP = get_local_ip()
-    app.logger.info(f"Server initialized - IP: {SERVER_IP}, Password: {SERVER_PASSWORD}")
+    if not SERVER_URL:
+        SERVER_URL = get_server_url()
+    app.logger.info(f"Server initialized - URL: {SERVER_URL}, Password: {SERVER_PASSWORD}")
 
 # Initialize server info at startup
 initialize_server()
@@ -139,15 +144,14 @@ initialize_server()
 @app.route('/')
 def index():
     """Main page showing server info and QR code"""
-    global SERVER_IP, SERVER_PASSWORD
+    global SERVER_URL, SERVER_PASSWORD
     if not SERVER_PASSWORD:
         SERVER_PASSWORD = generate_password()
-    if not SERVER_IP:
-        SERVER_IP = get_local_ip()
+    if not SERVER_URL:
+        SERVER_URL = get_server_url()
     
     return render_template('index.html', 
-                         server_ip=SERVER_IP, 
-                         server_port=SERVER_PORT,
+                         server_url=SERVER_URL, 
                          server_password=SERVER_PASSWORD)
 
 
@@ -168,7 +172,7 @@ def login():
         password = request.form.get('password')
         if password == SERVER_PASSWORD:
             session['authenticated'] = True
-            session['login_time'] = datetime.now()
+            session['login_time'] = datetime.now().timestamp()
             flash('Successfully authenticated!', 'success')
             return redirect(url_for('files'))
         else:
@@ -197,7 +201,7 @@ def login_required(f):
         
         # Check session timeout (1 hour)
         login_time = session.get('login_time')
-        if login_time and datetime.now() - login_time > timedelta(hours=1):
+        if login_time and datetime.now().timestamp() - login_time > 3600:  # 1 hour in seconds
             session.clear()
             flash('Session expired. Please log in again.', 'error')
             return redirect(url_for('login'))
@@ -394,10 +398,9 @@ def delete_file(filename):
 @app.route('/api/server-info')
 def api_server_info():
     """API endpoint to get server information"""
-    global SERVER_IP, SERVER_PASSWORD
+    global SERVER_URL, SERVER_PASSWORD
     return jsonify({
-        'ip': SERVER_IP,
-        'port': SERVER_PORT,
+        'url': SERVER_URL,
         'password': SERVER_PASSWORD
     })
 
@@ -425,14 +428,14 @@ if __name__ == '__main__':
     # Initialize server info
     if not SERVER_PASSWORD:
         SERVER_PASSWORD = generate_password()
-    if not SERVER_IP:
-        SERVER_IP = get_local_ip()
+    if not SERVER_URL:
+        SERVER_URL = get_server_url()
     
     print(f"\n🚀 File Server Starting...")
-    print(f"📍 Server URL: http://{SERVER_IP}:{SERVER_PORT}")
+    print(f"📍 Server URL: {SERVER_URL}")
     print(f"🔐 Password: {SERVER_PASSWORD}")
     print(f"📁 Upload Directory: {os.path.abspath(UPLOAD_FOLDER)}")
-    print(f"🌐 Access from other devices: http://{SERVER_IP}:{SERVER_PORT}")
-    print(f"📱 QR Code available at: http://{SERVER_IP}:{SERVER_PORT}/qr")
+    print(f"🌐 Access from other devices: {SERVER_URL}")
+    print(f"📱 QR Code available at: {SERVER_URL}/qr")
     
     app.run(host='0.0.0.0', port=SERVER_PORT, debug=True)

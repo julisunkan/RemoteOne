@@ -184,7 +184,7 @@ async function refreshInfo() {
         const serverPassword = document.getElementById('serverPassword');
         
         if (serverUrl) {
-            serverUrl.value = `http://${data.ip}:${data.port}`;
+            serverUrl.value = data.url;
         }
         
         if (serverPassword) {
