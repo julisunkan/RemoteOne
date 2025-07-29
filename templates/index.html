@@ -43,28 +43,31 @@
                             
                             <!-- Server Information -->
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="info-box">
                                         <label class="form-label fw-bold">
-                                            <i class="fas fa-globe me-1"></i>
-                                            Server URL
+                                            <i class="fas fa-wifi me-1"></i>
+                                            Network Access URLs
                                         </label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="serverUrl" 
-                                                   value="{{ server_url }}" readonly>
+                                        {% for network in network_ips %}
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">{{ network.interface }}</span>
+                                            <input type="text" class="form-control" id="networkUrl{{ loop.index }}" 
+                                                   value="{{ network.url }}" readonly>
                                             <button class="btn btn-outline-secondary" type="button" 
-                                                    onclick="copyToClipboard('serverUrl')" title="Copy URL">
+                                                    onclick="copyToClipboard('networkUrl{{ loop.index }}')" title="Copy URL">
                                                 <i class="fas fa-copy"></i>
                                             </button>
                                         </div>
+                                        {% endfor %}
                                         <small class="text-muted mt-1">
                                             <i class="fas fa-info-circle me-1"></i>
-                                            Tap the copy button or select and copy manually (Ctrl+C)
+                                            Use the Primary network URL for WiFi sharing with other devices
                                         </small>
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="info-box">
                                         <label class="form-label fw-bold">
                                             <i class="fas fa-key me-1"></i>
@@ -80,7 +83,7 @@
                                         </div>
                                         <small class="text-muted mt-1">
                                             <i class="fas fa-info-circle me-1"></i>
-                                            Tap the copy button or select and copy manually (Ctrl+C)
+                                            Share this password with other devices
                                         </small>
                                     </div>
                                 </div>
@@ -93,11 +96,11 @@
                         <div class="card-header bg-success text-white">
                             <h5 class="card-title mb-0">
                                 <i class="fas fa-qrcode me-2"></i>
-                                Quick Access QR Code
+                                WiFi Sharing QR Code
                             </h5>
                         </div>
                         <div class="card-body text-center">
-                            <p class="text-muted mb-3">Scan this QR code to quickly access the server URL and password</p>
+                            <p class="text-muted mb-3">Scan this QR code from any device on the same WiFi network to quickly access the server</p>
                             <div class="qr-container">
                                 <img src="{{ url_for('qr_code') }}" alt="QR Code" class="img-fluid qr-code" 
                                      style="max-width: 250px; background: white; padding: 10px; border-radius: 8px;">
@@ -130,6 +133,44 @@
                                         <i class="fas fa-sync-alt me-2"></i>
                                         Refresh Server Info
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- WiFi Setup Instructions -->
+                    <div class="card shadow-lg mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-wifi me-2"></i>
+                                WiFi Sharing Setup
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="setup-step text-center">
+                                        <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" 
+                                             style="width: 40px; height: 40px;">1</div>
+                                        <h6>Connect Devices</h6>
+                                        <p class="small text-muted">Ensure all devices are on the same WiFi network</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="setup-step text-center">
+                                        <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" 
+                                             style="width: 40px; height: 40px;">2</div>
+                                        <h6>Share URL</h6>
+                                        <p class="small text-muted">Copy the Primary network URL and share it with other devices</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="setup-step text-center">
+                                        <div class="step-number bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" 
+                                             style="width: 40px; height: 40px;">3</div>
+                                        <h6>Enter Password</h6>
+                                        <p class="small text-muted">Use the access password to login from any device</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

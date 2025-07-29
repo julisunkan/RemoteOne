@@ -56,21 +56,79 @@ def generate_password(length=12):
 
 
 def get_server_url():
-    """Get the server URL - prioritize Replit domain for external access"""
+    """Get the server URL - prioritize local network IP for WiFi access"""
     try:
-        # Check if running on Replit
-        replit_domain = os.environ.get('REPLIT_DEV_DOMAIN')
-        if replit_domain:
-            return f"https://{replit_domain}"
-        
-        # Fallback to local IP for development
+        # First try to get local network IP using socket connection
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
         s.close()
-        return f"http://{ip}:{SERVER_PORT}"
+        
+        # Don't use loopback addresses for network sharing
+        if not ip.startswith('127.'):
+            return f"http://{ip}:{SERVER_PORT}"
     except Exception:
-        return f"http://127.0.0.1:{SERVER_PORT}"
+        pass
+    
+    # Try alternative methods to get local IP
+    try:
+        import netifaces
+        for interface in netifaces.interfaces():
+            addrs = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addrs:
+                for addr_info in addrs[netifaces.AF_INET]:
+                    ip = addr_info.get('addr')
+                    if ip and not ip.startswith('127.') and not ip.startswith('169.254'):
+                        return f"http://{ip}:{SERVER_PORT}"
+    except ImportError:
+        pass
+    
+    # Last resort - try hostname resolution
+    try:
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        if not ip.startswith('127.'):
+            return f"http://{ip}:{SERVER_PORT}"
+    except:
+        pass
+    
+    # Final fallback to localhost
+    return f"http://127.0.0.1:{SERVER_PORT}"
+
+def get_all_network_ips():
+    """Get all available network IP addresses for display"""
+    ips = []
+    
+    # Method 1: Socket connection method
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        primary_ip = s.getsockname()[0]
+        s.close()
+        if not primary_ip.startswith('127.'):
+            ips.append({'interface': 'Primary', 'ip': primary_ip, 'url': f"http://{primary_ip}:{SERVER_PORT}"})
+    except:
+        pass
+    
+    # Method 2: netifaces library
+    try:
+        import netifaces
+        for interface in netifaces.interfaces():
+            addrs = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addrs:
+                for addr_info in addrs[netifaces.AF_INET]:
+                    ip = addr_info.get('addr')
+                    if ip and not ip.startswith('127.') and not ip.startswith('169.254'):
+                        # Skip if already found via primary method
+                        if not any(existing['ip'] == ip for existing in ips):
+                            ips.append({'interface': interface, 'ip': ip, 'url': f"http://{ip}:{SERVER_PORT}"})
+    except ImportError:
+        pass
+    
+    # Add localhost as last option
+    ips.append({'interface': 'Localhost', 'ip': '127.0.0.1', 'url': f"http://127.0.0.1:{SERVER_PORT}"})
+    
+    return ips
 
 
 def allowed_file(filename):
@@ -150,9 +208,11 @@ def index():
     if not SERVER_URL:
         SERVER_URL = get_server_url()
     
+    network_ips = get_all_network_ips()
     return render_template('index.html', 
                          server_url=SERVER_URL, 
-                         server_password=SERVER_PASSWORD)
+                         server_password=SERVER_PASSWORD,
+                         network_ips=network_ips)
 
 
 @app.route('/qr')
@@ -401,7 +461,8 @@ def api_server_info():
     global SERVER_URL, SERVER_PASSWORD
     return jsonify({
         'url': SERVER_URL,
-        'password': SERVER_PASSWORD
+        'password': SERVER_PASSWORD,
+        'network_ips': get_all_network_ips()
     })
 
 
