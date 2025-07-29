@@ -409,6 +409,49 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMediaPlayer();
     initializeNetworkMonitoring();
     
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/sw.js')
+            .then(function(registration) {
+                console.log('Service Worker registered successfully:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('Service Worker registration failed:', error);
+            });
+    }
+
+    // PWA Install functionality
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install button
+        if (installBtn) {
+            installBtn.style.display = 'block';
+            installBtn.addEventListener('click', () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showToast('App installed successfully!', 'success');
+                        installBtn.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            });
+        }
+    });
+    
+    // Hide install button if already installed
+    window.addEventListener('appinstalled', () => {
+        if (installBtn) {
+            installBtn.style.display = 'none';
+        }
+        showToast('App installed successfully!', 'success');
+    });
+    
     // Auto-hide alerts after 5 seconds
     setTimeout(() => {
         const alerts = document.querySelectorAll('.alert-dismissible:not(.permanent)');

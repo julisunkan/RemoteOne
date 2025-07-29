@@ -1,0 +1,36 @@
+{
+  "name": "WiFi File Server",
+  "short_name": "FileServer",
+  "description": "Personal file server for WiFi sharing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#212529",
+  "theme_color": "#0d6efd",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMwZDZlZmQiLz4KPHBhdGggZD0iTTQ4IDY0SDY0VjgwSDQ4VjY0WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTgwIDY0SDEyOFY4MEg4MFY2NFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik00OCA5NkgxMjhWMTEySDQ4Vjk2WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTQ4IDEyOEgxMDRWMTQ0SDQ4VjEyOFoiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE0NCIgY3k9IjEzNiIgcj0iMjQiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMzYgMTI4TDE1MiAxNDRMMTM2IDE2MEgxMjhWMTI4SDE1MloiIGZpbGw9IiMwZDZlZmQiLz4KPC9zdmc+",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMwZDZlZmQiLz4KPHBhdGggZD0iTTEyOCAxNzBIMTcwVjIxMkgxMjhWMTcwWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTIxMyAxNzBIMzQxVjIxMkgyMTNWMTcwWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyOCAyNTVIMzQxVjI5N0gxMjhWMjU1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyOCAzNDBIMjc3VjM4MkgxMjhWMzQwWiIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMzg0IiBjeT0iMzYxIiByPSI2NCIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTM1MiAzMjlMNDE2IDM5M0wzNTIgNDU3SDMwNFYzMjlINDE2WiIgZmlsbD0iIzBkNmVmZCIvPgo8L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Upload Files",
+      "short_name": "Upload",
+      "url": "/files",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQ4IDhMNjQgMjRINTZWNTZINDBWMjRIMzJMNDggOFoiIGZpbGw9IiMwZDZlZmQiLz4KPHBhdGggZD0iTTI0IDY0SDcyVjg4SDI0VjY0WiIgZmlsbD0iIzBkNmVmZCIvPgo8L3N2Zz4=",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

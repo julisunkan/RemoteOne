@@ -8,7 +8,7 @@ from io import BytesIO
 from urllib.parse import quote
 
 import qrcode
-from flask import Flask, render_template, request, redirect, url_for, session, send_file, flash, jsonify, abort
+from flask import Flask, render_template, request, redirect, url_for, session, send_file, flash, jsonify, abort, make_response, send_from_directory
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestedRangeNotSatisfiable
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -464,6 +464,21 @@ def api_server_info():
         'password': SERVER_PASSWORD,
         'network_ips': get_all_network_ips()
     })
+
+@app.route('/static/sw.js')
+def service_worker():
+    """Serve the service worker with proper headers"""
+    response = make_response(send_from_directory('static', 'sw.js'))
+    response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
+
+@app.route('/static/manifest.json')
+def manifest():
+    """Serve the PWA manifest"""
+    response = make_response(send_from_directory('static', 'manifest.json'))
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 
 @app.errorhandler(404)
