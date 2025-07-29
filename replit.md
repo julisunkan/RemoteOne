@@ -115,9 +115,22 @@ Preferred communication style: Simple, everyday language.
 - File type validation and extension checking
 - Secure filename sanitization
 
+## Recent Changes
+
+### July 29, 2025
+- ✓ Fixed Flask compatibility issues (`@app.before_first_request` deprecated)
+- ✓ Improved clipboard functionality with multiple fallback methods for different browsers
+- ✓ Removed service worker to fix HTTPS-only clipboard API issues
+- ✓ Enhanced error handling and toast notifications
+- ✓ Added helpful UI hints for manual copying when clipboard fails
+- ✓ Server successfully running with auto-generated password: cAEbCfgE8k^l
+- ✓ QR code generation working for easy mobile access
+
 ## Notes
 
 - The application is designed for local network use and personal file sharing
-- File management interface appears to be partially implemented based on provided code
+- Full file management interface implemented with drag & drop upload functionality
+- Media streaming support for video and audio files with HTML5 players
 - The system supports both development and production deployment scenarios
 - Network utilities provide fallback methods for IP detection across different environments
+- Clipboard functionality now works across different security contexts (HTTP/HTTPS)

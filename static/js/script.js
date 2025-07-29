@@ -6,21 +6,54 @@ async function copyToClipboard(elementId) {
         const element = document.getElementById(elementId);
         const text = element.value || element.textContent;
         
-        // Use the modern clipboard API if available
-        if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(text);
-        } else {
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            document.execCommand('copy');
-            textArea.remove();
+        let success = false;
+        
+        // Method 1: Modern clipboard API (works on HTTPS and localhost)
+        if (navigator.clipboard && (window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+            try {
+                await navigator.clipboard.writeText(text);
+                success = true;
+            } catch (clipboardErr) {
+                console.log('Clipboard API failed, trying fallback:', clipboardErr);
+            }
+        }
+        
+        // Method 2: Legacy execCommand fallback
+        if (!success) {
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                textArea.setSelectionRange(0, 99999); // For mobile devices
+                
+                const result = document.execCommand('copy');
+                textArea.remove();
+                
+                if (result) {
+                    success = true;
+                } else {
+                    throw new Error('execCommand failed');
+                }
+            } catch (execErr) {
+                console.log('execCommand failed:', execErr);
+            }
+        }
+        
+        // Method 3: Manual selection for user to copy
+        if (!success) {
+            // Select the text in the input field
+            element.focus();
+            element.select();
+            element.setSelectionRange(0, 99999); // For mobile devices
+            
+            showToast('Text selected! Press Ctrl+C (or Cmd+C on Mac) to copy', 'info');
+            return;
         }
         
         // Show success feedback
@@ -43,7 +76,20 @@ async function copyToClipboard(elementId) {
         
     } catch (err) {
         console.error('Failed to copy text: ', err);
-        showToast('Failed to copy to clipboard', 'error');
+        
+        // Final fallback - show the text in an alert
+        const element = document.getElementById(elementId);
+        const text = element.value || element.textContent;
+        
+        // Try to select the text for manual copying
+        try {
+            element.focus();
+            element.select();
+            showToast('Please manually copy the selected text (Ctrl+C)', 'warning');
+        } catch (selectErr) {
+            // Last resort - show in alert
+            alert(`Copy this text manually:\n\n${text}`);
+        }
     }
 }
 
@@ -59,13 +105,31 @@ function showToast(message, type = 'info') {
         document.body.appendChild(toastContainer);
     }
     
+    // Map types to Bootstrap colors
+    const typeColorMap = {
+        'error': 'danger',
+        'success': 'success',
+        'warning': 'warning',
+        'info': 'info'
+    };
+    
+    const iconMap = {
+        'error': 'exclamation-triangle',
+        'success': 'check-circle',
+        'warning': 'exclamation-circle',
+        'info': 'info-circle'
+    };
+    
+    const bgColor = typeColorMap[type] || 'info';
+    const icon = iconMap[type] || 'info-circle';
+    
     // Create toast element
     const toastId = 'toast-' + Date.now();
     const toastHTML = `
-        <div id="${toastId}" class="toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'primary' : 'info'} border-0" role="alert">
+        <div id="${toastId}" class="toast align-items-center text-white bg-${bgColor} border-0" role="alert">
             <div class="d-flex">
                 <div class="toast-body">
-                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                    <i class="fas fa-${icon} me-2"></i>
                     ${message}
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -77,17 +141,28 @@ function showToast(message, type = 'info') {
     
     // Initialize and show toast
     const toastElement = document.getElementById(toastId);
-    const toast = new bootstrap.Toast(toastElement, {
-        autohide: true,
-        delay: 3000
-    });
     
-    toast.show();
-    
-    // Remove toast element after it's hidden
-    toastElement.addEventListener('hidden.bs.toast', () => {
-        toastElement.remove();
-    });
+    // Fallback if Bootstrap toast is not available
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: type === 'warning' || type === 'error' ? 5000 : 3000
+        });
+        
+        toast.show();
+        
+        // Remove toast element after it's hidden
+        toastElement.addEventListener('hidden.bs.toast', () => {
+            toastElement.remove();
+        });
+    } else {
+        // Manual fallback
+        toastElement.style.display = 'block';
+        setTimeout(() => {
+            toastElement.style.opacity = '0';
+            setTimeout(() => toastElement.remove(), 300);
+        }, type === 'warning' || type === 'error' ? 5000 : 3000);
+    }
 }
 
 // Refresh server information
@@ -372,18 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Service worker registration for offline functionality
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/static/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}
+// Service worker removed to fix clipboard issues in non-HTTPS contexts
 
 // Handle beforeunload for unsaved changes
 window.addEventListener('beforeunload', function(e) {
